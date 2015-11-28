@@ -1,3 +1,10 @@
+/*
+ * Warnings: I can't change the indent block to 4 spaces.
+ * Please change it manually to receive a better view.
+ * 
+ * Author: Fred Jiang, SE Inst., Shanghai Jiaotong Univ.
+ */
+
 #include <vector>
 #include <iostream>
 
