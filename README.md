@@ -1,6 +1,5 @@
 # LearningOpenCV
-This is my code(sjtu:5130379033) for Computer Vision homeworks.
-###To Prof.Xiao and TAs: I'm 5130379033 from sjtu, and I'm not copying this code, for it is my works!
+This is my code for Computer Vision homeworks.
 
 ## Erode and Dilate
 This is binary image processing, simply implements two methods(without OpenCV).
