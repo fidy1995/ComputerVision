@@ -1,3 +1,10 @@
+/*
+ * Warnings: I can't change the indent block to 4 spaces.
+ * Please change it manually to receive a better view.
+ * 
+ * Author: Fred Jiang, SE Inst., Shanghai Jiaotong Univ.
+ */
+
 #include <cv.h>
 #include <highgui.h>
 
@@ -7,15 +14,15 @@
 using namespace std;
 
 int Otsu(IplImage *src) {
-	int ret; // ãĞÖµ
-	int countBG[256] = { 0 }; // ±³¾°×Ü¸öÊı£¨ÂÔÈ¥Ç°¾°£¬Ö±½ÓÊ¹ÓÃ1-count£©
+	int ret; // é˜ˆå€¼
+	int countBG[256] = { 0 }; // èƒŒæ™¯æ€»ä¸ªæ•°ï¼ˆç•¥å»å‰æ™¯ï¼Œç›´æ¥ä½¿ç”¨1-countï¼‰
 	int countOR[256] = { 0 };
 
-	double probBG = 0; // ±³¾°¸ÅÂÊ£¨Õ¼±È£©
-	double probOR = 0; // Ç°¾°¸ÅÂÊ£¨Õ¼±È£©
-	double variance = 0; // Àà¼ä·½²î
-	double averageGrey = 0; // Í¼ÏñµÄÆ½¾ù»Ò¶È
-	double maxVariance = 0; // ×î´óÀà¼ä·½²î
+	double probBG = 0; // èƒŒæ™¯æ¦‚ç‡ï¼ˆå æ¯”ï¼‰
+	double probOR = 0; // å‰æ™¯æ¦‚ç‡ï¼ˆå æ¯”ï¼‰
+	double variance = 0; // ç±»é—´æ–¹å·®
+	double averageGrey = 0; // å›¾åƒçš„å¹³å‡ç°åº¦
+	double maxVariance = 0; // æœ€å¤§ç±»é—´æ–¹å·®
 
 	float histogram[256] = { 0 };
 	double averageBGGrey[256] = { 0.0 };
@@ -30,15 +37,15 @@ int Otsu(IplImage *src) {
 		}
 	}
 
-	// »ñµÃÍ¼ÏñÆ½¾ù»Ò¶È
+	// è·å¾—å›¾åƒå¹³å‡ç°åº¦
 	for (int threshold = 0; threshold < 256; threshold++) {
-		// »ñµÃÔÚãĞÖµÎªthresholdÊ±±³¾°Í¼ÏñµÄÆ½¾ù»Ò¶È
+		// è·å¾—åœ¨é˜ˆå€¼ä¸ºthresholdæ—¶èƒŒæ™¯å›¾åƒçš„å¹³å‡ç°åº¦
 		for (int i = 0; i <= threshold; i++) {
 			averageBGGrey[threshold] += i * histogram[i];
 			countBG[threshold] += histogram[i];
 		}
 		averageBGGrey[threshold] = averageBGGrey[threshold] / countBG[threshold];
-		// »ñµÃÔÚãĞÖµÎªthresholdÊ±Ç°¾°Í¼ÏñµÄÆ½¾ù»Ò¶È
+		// è·å¾—åœ¨é˜ˆå€¼ä¸ºthresholdæ—¶å‰æ™¯å›¾åƒçš„å¹³å‡ç°åº¦
 		for (int i = threshold + 1; i < 256; i++) {
 			averageORGrey[threshold] += i * histogram[i];
 			countOR[threshold] += histogram[i];
@@ -46,15 +53,15 @@ int Otsu(IplImage *src) {
 		averageORGrey[threshold] = averageORGrey[threshold] / countOR[threshold];
 	}
 
-	// Ã¶¾ÙËùÓĞµÄthresholdÖµ£¬ÕÒ³ö×î´óÀà¼ä·½²î
+	// æšä¸¾æ‰€æœ‰çš„thresholdå€¼ï¼Œæ‰¾å‡ºæœ€å¤§ç±»é—´æ–¹å·®
 	for (int i = 0; i < 256; i++) {
 		probBG = (double)countBG[i] / size;
 		probOR = 1.0 - probBG;
-		// ¼ÆËãÍ¼ÏñÆ½¾ù»Ò¶ÈºÍÀà¼ä·½²î
+		// è®¡ç®—å›¾åƒå¹³å‡ç°åº¦å’Œç±»é—´æ–¹å·®
 		averageGrey = averageBGGrey[i] * probBG + averageORGrey[i] * probOR;
 		variance = probBG * probOR *  (averageBGGrey[i] - averageORGrey[i]) * (averageBGGrey[i] - averageORGrey[i]);
 
-		// »ñµÃ×î´óÖµ
+		// è·å¾—æœ€å¤§å€¼
 		if (variance > maxVariance) {
 			maxVariance = variance;
 			ret = i;

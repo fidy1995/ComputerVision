@@ -1,3 +1,10 @@
+/*
+ * Warnings: I can't change the indent block to 4 spaces.
+ * Please change it manually to receive a better view.
+ * 
+ * Author: Fred Jiang, SE Inst., Shanghai Jiaotong Univ.
+ */
+
 #include <iostream>
 #include <cv.h>
 #include <highgui.h>  
@@ -15,9 +22,9 @@ int greyMax = 0;
 int greyMin = 256;
 double c;
 
-// Í³¼Æ»Ò¶ÈÍ¼
+// ç»Ÿè®¡ç°åº¦å›¾
 void generateHistoGram();
-// Í³¼ÆÆ½¾ù»Ò¶È
+// ç»Ÿè®¡å¹³å‡ç°åº¦
 void generateAverageAndC();
 int Otsu();
 int minDivergence();
@@ -66,7 +73,7 @@ int main(int argc, char** argv)
 			break;
 		}
 		cvThreshold(src, dst, threshold, 255, CV_THRESH_BINARY);
-		// ÎªÁËÔÚÒ»¸ö´°¿ÚÖĞÏÔÊ¾ÁùÕÅÍ¼Æ¬£¬°ÑÍ¼Æ¬ËõĞ¡
+		// ä¸ºäº†åœ¨ä¸€ä¸ªçª—å£ä¸­æ˜¾ç¤ºå…­å¼ å›¾ç‰‡ï¼ŒæŠŠå›¾ç‰‡ç¼©å°
 		tempd[i] = cvCreateImage(CvSize(width * 0.5, height * 0.5), 8, 1);
 		cvResize(dst, tempd[i], CV_INTER_LINEAR);
 
@@ -76,7 +83,7 @@ int main(int argc, char** argv)
 	cvReleaseImage(&src);
 	cvReleaseImage(&dst);
 
-	// ÔÚÒ»¸ö´°¿ÚÖĞÏÔÊ¾6ÕÅÍ¼Æ¬
+	// åœ¨ä¸€ä¸ªçª—å£ä¸­æ˜¾ç¤º6å¼ å›¾ç‰‡
 	CvSize dstSize;
 	dstSize.width = width * 1.5;
 	dstSize.height = height * 1.0;
@@ -97,7 +104,7 @@ int main(int argc, char** argv)
 }
 
 void generateHistoGram() {
-	// »ñµÃÍ¼Ïñ»Ò¶È
+	// è·å¾—å›¾åƒç°åº¦
 	for (int m = 0; m < height; m++)
 	{
 		unsigned char* p = (unsigned char*)src->imageData + src->widthStep * m;
@@ -109,14 +116,14 @@ void generateHistoGram() {
 }
 
 void generateAverageAndC() {
-	// »ñµÃÍ¼ÏñÆ½¾ù»Ò¶È
+	// è·å¾—å›¾åƒå¹³å‡ç°åº¦
 	for (int threshold = 0; threshold < 256; threshold++) {
 		int countBG = 0, countOR = 0;
-		// »ñµÃÔÚãĞÖµÎªthresholdÊ±±³¾°Í¼ÏñµÄÆ½¾ù»Ò¶È
+		// è·å¾—åœ¨é˜ˆå€¼ä¸ºthresholdæ—¶èƒŒæ™¯å›¾åƒçš„å¹³å‡ç°åº¦
 		for (int i = 0; i <= threshold; i++) {
 			averageBGGrey[threshold] += i * histogram[i];
 			countBG += histogram[i];
-			// »ñµÃÍ¼ÏñÖĞ»Ò¶ÈµÄ×îĞ¡ÖµºÍ×î´óÖµ
+			// è·å¾—å›¾åƒä¸­ç°åº¦çš„æœ€å°å€¼å’Œæœ€å¤§å€¼
 			if (greyMin > i && histogram[i] > 0) {
 				greyMin = i;
 			}
@@ -125,11 +132,11 @@ void generateAverageAndC() {
 			}
 		}
 		averageBGGrey[threshold] = averageBGGrey[threshold] / countBG;
-		// »ñµÃÔÚãĞÖµÎªthresholdÊ±Ç°¾°Í¼ÏñµÄÆ½¾ù»Ò¶È
+		// è·å¾—åœ¨é˜ˆå€¼ä¸ºthresholdæ—¶å‰æ™¯å›¾åƒçš„å¹³å‡ç°åº¦
 		for (int i = threshold + 1; i < 256; i++) {
 			averageORGrey[threshold] += i * histogram[i];
 			countOR += histogram[i];
-			// »ñµÃÍ¼ÏñÖĞ»Ò¶ÈµÄ×îĞ¡ÖµºÍ×î´óÖµ
+			// è·å¾—å›¾åƒä¸­ç°åº¦çš„æœ€å°å€¼å’Œæœ€å¤§å€¼
 			if (greyMin > i && histogram[i] > 0) {
 				greyMin = i;
 			}
@@ -143,27 +150,27 @@ void generateAverageAndC() {
 }
 
 int Otsu() {
-	int threshold; // ãĞÖµ
-	int countBG = 0; // ±³¾°×Ü¸öÊı£¨ÂÔÈ¥Ç°¾°£¬Ö±½ÓÊ¹ÓÃ1-count£©
+	int threshold; // é˜ˆå€¼
+	int countBG = 0; // èƒŒæ™¯æ€»ä¸ªæ•°ï¼ˆç•¥å»å‰æ™¯ï¼Œç›´æ¥ä½¿ç”¨1-countï¼‰
 
-	double probBG = 0; // ±³¾°¸ÅÂÊ£¨Õ¼±È£©
-	double probOR = 0; // Ç°¾°¸ÅÂÊ£¨Õ¼±È£©
-	double variance = 0; // Àà¼ä·½²î
-	double averageGrey = 0; // Í¼ÏñµÄÆ½¾ù»Ò¶È
-	double maxVariance = 0; // ×î´óÀà¼ä·½²î
+	double probBG = 0; // èƒŒæ™¯æ¦‚ç‡ï¼ˆå æ¯”ï¼‰
+	double probOR = 0; // å‰æ™¯æ¦‚ç‡ï¼ˆå æ¯”ï¼‰
+	double variance = 0; // ç±»é—´æ–¹å·®
+	double averageGrey = 0; // å›¾åƒçš„å¹³å‡ç°åº¦
+	double maxVariance = 0; // æœ€å¤§ç±»é—´æ–¹å·®
 	
-	// Ã¶¾ÙËùÓĞµÄthresholdÖµ£¬ÕÒ³ö×î´óÀà¼ä·½²î
+	// æšä¸¾æ‰€æœ‰çš„thresholdå€¼ï¼Œæ‰¾å‡ºæœ€å¤§ç±»é—´æ–¹å·®
 	for (int i = 0; i < 256; i++) {
 		for (int j = 0; j <= i; j++) {
 			countBG += averageBGGrey[i];
 		}
 		probBG = (double)countBG / size;
 		probOR = 1.0 - probBG;
-		// ¼ÆËãÍ¼ÏñÆ½¾ù»Ò¶ÈºÍÀà¼ä·½²î
+		// è®¡ç®—å›¾åƒå¹³å‡ç°åº¦å’Œç±»é—´æ–¹å·®
 		averageGrey = averageBGGrey[i] * probBG + averageORGrey[i] * probOR; 
 		variance = probBG * probOR *  (averageBGGrey[i] - averageORGrey[i]) * (averageBGGrey[i] - averageORGrey[i]);
 
-		// »ñµÃ×î´óÖµ
+		// è·å¾—æœ€å¤§å€¼
 		if (variance > maxVariance) {
 			maxVariance = variance;
 			threshold = i;
@@ -175,7 +182,7 @@ int Otsu() {
 }
 
 double miu(int a, int threshold) {
-	// ÔÚÄ£ºı¼¯ÀíÂÛÖĞµÄmembership function
+	// åœ¨æ¨¡ç³Šé›†ç†è®ºä¸­çš„membership function
 	if (a > threshold) {
 		return exp(-c * abs(a - averageORGrey[threshold]));
 	}
@@ -189,16 +196,16 @@ int minDivergence() {
 	int result;
 	double divergence;
 	double minDiver = 1000000000.0;
-	// Ã¶¾ÙËùÓĞ
+	// æšä¸¾æ‰€æœ‰
 	for (threshold = 0; threshold < 256; threshold++) {
 		divergence = 0.0;
-		// Í³¼ÆËùÓĞµãµÄÇø·Ö¶È
+		// ç»Ÿè®¡æ‰€æœ‰ç‚¹çš„åŒºåˆ†åº¦
 		for (int m = 0; m < height; m++) {
 			unsigned char* p = (unsigned char*)src->imageData + src->widthStep * m;
 			for (int n = 0; n < width; n++) {
-				int grey = int(*p++); // aij, Í¼ÏñÔÚ(i, j)´¦µÄ»Ò¶È
+				int grey = int(*p++); // aij, å›¾åƒåœ¨(i, j)å¤„çš„ç°åº¦
 				double miuA = miu(grey, threshold); // miua(aij)
-				double miuB = 1.0; // Ä¬ÈÏÖµÈ¡1
+				double miuB = 1.0; // é»˜è®¤å€¼å–1
 				divergence += (2.0 - (1.0 - miuA + miuB) * exp(miuA - miuB)
 					- (1.0 - miuB + miuA) * exp(miuB - miuA));
 			}
@@ -219,16 +226,16 @@ int linearIndex() {
 	double minIndex = 100000000.0;
 	for (threshold = 0; threshold < 256; threshold++) {
 		index = 0;
-		// Í³¼ÆÏßĞÔÄ£ºıÖ¸Êı
+		// ç»Ÿè®¡çº¿æ€§æ¨¡ç³ŠæŒ‡æ•°
 		for (int m = 0; m < height; m++) {
 			unsigned char* p = (unsigned char*)src->imageData + src->widthStep * m;
 			for (int n = 0; n < width; n++) {
-				int grey = int(*p++); // aij, Í¼ÏñÔÚ(i, j)´¦µÄ»Ò¶È
+				int grey = int(*p++); // aij, å›¾åƒåœ¨(i, j)å¤„çš„ç°åº¦
 				double miuA = miu(grey, threshold);
 				index += min(miuA, 1.0 - miuA);
 			}
 		}
-		// ÔÚÕâÀï¶Ô¹«Ê½½øĞĞÁË¼ò»¯£¬ÒòÎªËùÓĞµÄ±È½Ï¶¼ÓĞ³ËÒÔ2/n£¬ËùÒÔ´Ë´¦Ïàµ±ÓÚÏûÈ¥
+		// åœ¨è¿™é‡Œå¯¹å…¬å¼è¿›è¡Œäº†ç®€åŒ–ï¼Œå› ä¸ºæ‰€æœ‰çš„æ¯”è¾ƒéƒ½æœ‰ä¹˜ä»¥2/nï¼Œæ‰€ä»¥æ­¤å¤„ç›¸å½“äºæ¶ˆå»
 		if (index < minIndex) {
 			result = threshold;
 			minIndex = index;
@@ -245,16 +252,16 @@ int quardicIndex() {
 	double minIndex = 100000000.0;
 	for (threshold = 0; threshold < 256; threshold++) {
 		index = 0;
-		// Í³¼ÆÆ½·½Ä£ºıÖ¸Êı
+		// ç»Ÿè®¡å¹³æ–¹æ¨¡ç³ŠæŒ‡æ•°
 		for (int m = 0; m < height; m++) {
 			unsigned char* p = (unsigned char*)src->imageData + src->widthStep * m;
 			for (int n = 0; n < width; n++) {
-				int grey = int(*p++); // aij, Í¼ÏñÔÚ(i, j)´¦µÄ»Ò¶È
+				int grey = int(*p++); // aij, å›¾åƒåœ¨(i, j)å¤„çš„ç°åº¦
 				double miuA = miu(grey, threshold);
 				index += pow(min(miuA, 1.0 - miuA), 2);
 			}
 		}
-		// ÔÚÕâÀï¶Ô¹«Ê½½øĞĞÁË¼ò»¯£¬ÒòÎªËùÓĞµÄ±È½Ï¶¼ÓĞÏÈÆ½·½ÔÙ³ËÒÔ2/sqrt(n)£¬ËùÒÔ´Ë´¦Ïàµ±ÓÚÏûÈ¥
+		// åœ¨è¿™é‡Œå¯¹å…¬å¼è¿›è¡Œäº†ç®€åŒ–ï¼Œå› ä¸ºæ‰€æœ‰çš„æ¯”è¾ƒéƒ½æœ‰å…ˆå¹³æ–¹å†ä¹˜ä»¥2/sqrt(n)ï¼Œæ‰€ä»¥æ­¤å¤„ç›¸å½“äºæ¶ˆå»
 		if (index < minIndex) {
 			result = threshold;
 			minIndex = index;
@@ -272,16 +279,16 @@ int maxSimilarity() {
 	double maxSim = 0.0;
 	for (threshold = 0; threshold < 256; threshold++) {
 		similarity = 0;
-		// Í³¼ÆÏàËÆ¶È
+		// ç»Ÿè®¡ç›¸ä¼¼åº¦
 		for (int m = 0; m < height; m++) {
 			unsigned char* p = (unsigned char*)src->imageData + src->widthStep * m;
 			for (int n = 0; n < width; n++) {
-				int grey = int(*p++); // aij, Í¼ÏñÔÚ(i, j)´¦µÄ»Ò¶È
+				int grey = int(*p++); // aij, å›¾åƒåœ¨(i, j)å¤„çš„ç°åº¦
 				double miuA = miu(grey, threshold);
 				similarity += miuA;
 			}
 		}
-		// ¼ÆËã×î´óµÄÏàËÆ¶È
+		// è®¡ç®—æœ€å¤§çš„ç›¸ä¼¼åº¦
 		if (similarity > maxSim) {
 			result = threshold;
 			maxSim = similarity;
@@ -301,16 +308,16 @@ int geometry() {
 	for (threshold = 0; threshold < 256; threshold++) {
 		aMiu = 0;
 		pMiu = 0;
-		// Í³¼ÆËùÓĞµãµÄÇø·Ö¶È
+		// ç»Ÿè®¡æ‰€æœ‰ç‚¹çš„åŒºåˆ†åº¦
 		for (int m = 0; m < height; m++) {
 			unsigned char* p = (unsigned char*)src->imageData + src->widthStep * m;
 			for (int n = 0; n < width; n++) {
-				int grey = int(*p++); // aij, Í¼ÏñÔÚ(i, j)´¦µÄ»Ò¶È
+				int grey = int(*p++); // aij, å›¾åƒåœ¨(i, j)å¤„çš„ç°åº¦
 				double miuA = miu(grey, threshold);
 				aMiu += miuA;
 			}
 		}
-		// PmiuµÄµÚÒ»ÏîºÍ
+		// Pmiuçš„ç¬¬ä¸€é¡¹å’Œ
 		for (int m = 0; m < height - 1; m++) {
 			unsigned char* p = (unsigned char*)src->imageData + src->widthStep * m;
 			unsigned char* p1 = (unsigned char*)src->imageData + src->widthStep * (m + 1);
@@ -322,7 +329,7 @@ int geometry() {
 				pMiu += abs(miuP - miuP2);
 			}
 		}
-		// PmiuµÄµÚ¶şÏîºÍ
+		// Pmiuçš„ç¬¬äºŒé¡¹å’Œ
 		for (int m = 0; m < height; m++) {
 			unsigned char* p = (unsigned char*)src->imageData + src->widthStep * m;
 			unsigned char* p1 = (unsigned char*)src->imageData + src->widthStep * m + 1;
@@ -334,7 +341,7 @@ int geometry() {
 				pMiu += abs(miuP - miuP2);
 			}
 		}
-		// Ô­¹«Ê½
+		// åŸå…¬å¼
 		comp = aMiu / (pMiu * pMiu);
 		if (comp > maxComp) {
 			result = threshold;
