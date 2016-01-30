@@ -13,6 +13,4 @@ Please put an image called "test.bmp" in the folder.
 This is also binary image processing, using thining and thickening(probably not used).
 You can see it clearly that the image is changing.
 
-## Other
-I made a mistake about it! I was told to be cheating, they should look at the submit date.
-I will submit other code right after the score is known.
+## I LOST ALL MY UPDATES DUE TO THE CONNECTION FAILURE. I'M ANGRY.
